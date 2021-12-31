@@ -79,7 +79,9 @@ class ServiceController extends ApiMutableServiceControllerBase
             if (empty($key)) {
                 continue;
             }
-            if (in_array($key, self::$dateTimeFields, true)) {
+            if ($value === 'N/A') {
+                $norm = null;
+            } elseif (in_array($key, self::$dateTimeFields, true)) {
                 $norm = $this->tryParseDateTime($value);
             } elseif (in_array($key, self::$dateFields, true)) {
                 $norm = $this->tryParseDate($value);
