@@ -12,6 +12,13 @@ WWW: http://www.apcupsd.org/
 Plugin Changelog
 ================
 
+1.2.2
+
+* Widget: add status update date
+* Widget: parse and format status update date and battery date
+* Status API: convert N/A to null
+* Status API: convert date fields to RFC3339/ISO8601 format
+
 1.2.1
 
 * Widget: fix configuration page link
