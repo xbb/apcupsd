@@ -78,7 +78,7 @@ $(document).ready(() => {
     };
 
     const renderText = (data, label) => {
-        const text = typeof data === "string" ? data : data.value;
+        const text = typeof data === 'string' ? data : data.value;
         return $newRow($('<td></td>').text(text), label);
     };
 
@@ -100,11 +100,11 @@ $(document).ready(() => {
     const renderHighlight = (text, label, okRegexp, errRegexp) => {
         const textEl = $('<span class="apcupsd-widget-highlight"></span>').text(text);
         if (okRegexp && okRegexp.exec(text)) {
-            textEl.addClass("text-success");
+            textEl.addClass('text-success');
         } else if (errRegexp && errRegexp.exec(text)) {
-            textEl.addClass("text-danger");
+            textEl.addClass('text-danger');
         } else {
-            textEl.addClass("text-warning");
+            textEl.addClass('text-warning');
         }
         return $newRow($('<td></td>').append(textEl), label);
     };
