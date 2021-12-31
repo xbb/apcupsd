@@ -32,6 +32,8 @@
 
 namespace OPNsense\Apcupsd\Api;
 
+use DateTime;
+use DateTimeInterface;
 use OPNsense\Core\Backend;
 use OPNsense\Base\ApiMutableServiceControllerBase;
 
@@ -41,6 +43,20 @@ class ServiceController extends ApiMutableServiceControllerBase
     protected static $internalServiceTemplate = 'OPNsense/Apcupsd';
     protected static $internalServiceEnabled = 'general.Enabled';
     protected static $internalServiceName = 'apcupsd';
+
+    private static $dateTimeFields = [
+        'DATE',
+        'STARTTIME',
+        'MASTERUPD',
+        'END APC',
+        'XONBATT',
+        'XOFFBATT',
+    ];
+
+    private static $dateFields = [
+        'MANDATE',
+        'BATDATE'
+    ];
 
     public function getUpsStatusAction()
     {
@@ -63,7 +79,11 @@ class ServiceController extends ApiMutableServiceControllerBase
             if (empty($key)) {
                 continue;
             }
-            if (preg_match('/^((?:[0-9]*[.])?[0-9]+)(?:\s+\w+)?$/i', $value, $matches)) {
+            if (in_array($key, self::$dateTimeFields, true)) {
+                $norm = $this->tryParseDateTime($value);
+            } elseif (in_array($key, self::$dateFields, true)) {
+                $norm = $this->tryParseDate($value);
+            } elseif (preg_match('/^((?:[0-9]*[.])?[0-9]+)(?:\s+\w+)?$/i', $value, $matches)) {
                 $norm = floatval($matches[1]);
             }
             $status[$key] = array(
@@ -72,6 +92,34 @@ class ServiceController extends ApiMutableServiceControllerBase
             );
         }
         return $status;
+    }
+
+    private function tryParseDateTime($dateTimeString) {
+        $formats = [
+            'Y-m-d H:i:s P', // 2021-12-27 17:51:42 +0100
+            'D M d H:i:s T Y' // Sat Sep 16 17:13:00 CEST 2000
+        ];
+        foreach ($formats as $format) {
+            $dt = DateTime::createFromFormat($format, $dateTimeString);
+            if ($dt) {
+                return $dt->format(DateTimeInterface::RFC3339);
+            }
+        }
+        return $dateTimeString;
+    }
+
+    private function tryParseDate($dateString) {
+        $formats = [
+            'Y-m-d', // 2021-12-27
+            'm/d/y', // 12/27/21
+        ];
+        foreach ($formats as $format) {
+            $dt = DateTime::createFromFormat($format, $dateString);
+            if ($dt) {
+                return $dt->format('Y-m-d');
+            }
+        }
+        return $dateString;
     }
 
     private function getUpsStatusOutput()
