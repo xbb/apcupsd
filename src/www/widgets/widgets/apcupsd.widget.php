@@ -51,6 +51,8 @@ require_once("widgets/include/apcupsd.inc");
 </style>
 <script>
 $(document).ready(() => {
+    const withMomentJs = moment && moment.version && typeof moment === 'function';
+
     const $newCell = (content) => $('<td></td>').html(content);
 
     const $newLabel = (text) => {
@@ -80,6 +82,19 @@ $(document).ready(() => {
     const renderText = (data, label) => {
         const text = typeof data === 'string' ? data : data.value;
         return $newRow($('<td></td>').text(text), label);
+    };
+
+    const renderDateString = (data, label, format, parseFormat) => {
+        let value = typeof data === 'string' ? data : (data.norm || data.value);
+        let text;
+        if (withMomentJs) {
+            const m = moment(value, parseFormat);
+            if (m.isValid()) {
+                m.locale(window.navigator.language);
+                text = m.format(format);
+            }
+        }
+        return renderText(text || value, label);
     };
 
     const renderProgress = (data, label, progressText) => {
@@ -169,11 +184,15 @@ $(document).ready(() => {
         }
 
         if (status.BATTDATE) {
-            rows.push(renderText(status.BATTDATE, 'Battery date'));
+            rows.push(renderDateString(status.BATTDATE, 'Battery date', 'll', 'YYYY-MM-DD'));
         }
 
         if (status.ITEMP) {
             rows.push(renderText(status.ITEMP, 'Temperature'));
+        }
+
+        if (status.DATE) {
+            rows.push(renderDateString(status.DATE, 'Status update', 'll LTS'));
         }
 
         $('#apcupsd-widget-tbody').html(rows);
