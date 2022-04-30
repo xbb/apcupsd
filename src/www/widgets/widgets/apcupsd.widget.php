@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (C) 2021 Nicola Pellegrini <xbb@xbblabs.com>
+ * Copyright (C) 2021 Nicola Pellegrini
  *
  * All rights reserved.
  *

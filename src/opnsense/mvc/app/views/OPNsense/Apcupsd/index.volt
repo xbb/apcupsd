@@ -1,7 +1,7 @@
 {#
  # Copyright (C) 2021 Dan Lundqvist
  # Copyright (C) 2021 David Berry
- # Copyright (C) 2021 Nicola Pellegrini <xbb@xbblabs.com>
+ # Copyright (C) 2021 Nicola Pellegrini
  #
  # All rights reserved.
  #
@@ -57,10 +57,10 @@
 
         // link save button to API set action
         $('#saveAct').click(function(){
-            saveFormToEndpoint(url='/api/apcupsd/settings/set',formid='frm_GeneralSettings',callback_ok=function(){
+            saveFormToEndpoint('/api/apcupsd/settings/set', 'frm_GeneralSettings', function() {
                 $('#frm_GeneralSettings_progress').addClass('fa fa-spinner fa-pulse');
                 // action to run after successful save, for example reconfigure service.
-                ajaxCall(url='/api/apcupsd/service/reconfigure', sendData={},callback=function(data,status) {
+                ajaxCall('/api/apcupsd/service/reconfigure', {}, function(data, status) {
                     // action to run after reload
                     $('#frm_GeneralSettings_progress').removeClass('fa fa-spinner fa-pulse');
                     updateServiceControlUI('apcupsd');

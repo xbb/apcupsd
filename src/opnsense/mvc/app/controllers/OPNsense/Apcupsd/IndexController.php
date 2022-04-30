@@ -3,7 +3,7 @@
 /**
  *    Copyright (C) 2021 Dan Lundqvist
  *    Copyright (C) 2021 David Berry
- *    Copyright (C) 2021 Nicola Pellegrini <xbb@xbblabs.com>
+ *    Copyright (C) 2021 Nicola Pellegrini
  *
  *    All rights reserved.
  *
